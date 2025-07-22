@@ -1,0 +1,254 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Behavior Expectations: Solve It!</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Light blue-gray background */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align to top to allow scrolling if content is long */
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        #app-container {
+            background-color: #ffffff;
+            border-radius: 1.5rem; /* More rounded corners */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            max-width: 800px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        textarea {
+            resize: vertical; /* Allow vertical resizing */
+            min-height: 80px; /* Minimum height for textareas */
+        }
+        .feedback-section {
+            background-color: #e2f0ff; /* Light blue for feedback */
+            border-left: 5px solid #3b82f6; /* Blue border */
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-top: 1rem;
+        }
+        .feedback-section h3 {
+            color: #1e40af; /* Darker blue for heading */
+        }
+        .feedback-section p {
+            color: #1f2937; /* Dark gray text */
+        }
+    </style>
+</head>
+<body>
+    <div id="app-container" class="relative">
+        <!-- Progress Indicator -->
+        <div id="progress-indicator" class="text-sm text-gray-500 text-center mb-4">
+            Scenario 1 of 6
+        </div>
+
+
+        <!-- Scenario Display -->
+        <div class="bg-blue-50 p-6 rounded-xl shadow-inner border border-blue-100">
+            <h2 class="text-2xl font-bold text-blue-800 mb-3">Scenario:</h2>
+            <p id="scenario-text" class="text-gray-800 text-lg leading-relaxed"></p>
+        </div>
+
+
+        <!-- User Input Section -->
+        <div class="flex flex-col gap-4">
+            <div>
+                <label for="user-rule" class="block text-gray-700 font-semibold mb-2">What behavior expectation or Chapter 19 rule applies here?</label>
+                <textarea id="user-rule" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200" placeholder="Type your answer here..."></textarea>
+            </div>
+            <div>
+                <label for="user-handling" class="block text-gray-700 font-semibold mb-2">What is the appropriate way to handle this situation?</label>
+                <textarea id="user-handling" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200" placeholder="Type your answer here..."></textarea>
+            </div>
+        </div>
+
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row justify-center gap-4 mt-4">
+            <button id="check-answer-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+                Check My Answer
+            </button>
+            <button id="clear-answers-btn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded-xl shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+                Clear My Answers
+            </button>
+        </div>
+
+
+        <!-- Feedback Section (Hidden by default) -->
+        <div id="feedback-area" class="feedback-section hidden">
+            <h3 class="text-xl font-bold mb-2">From the Student Planner:</h3>
+            <p class="mb-2"><strong class="text-blue-700">Applicable Rule:</strong> <span id="feedback-rule"></span></p>
+            <p class="mb-2"><strong class="text-blue-700">Suggested Handling:</strong> <span id="feedback-handling"></span></p>
+            <p class="text-sm text-gray-600"><strong class="text-blue-700">Reference:</strong> <span id="feedback-reference"></span></p>
+        </div>
+
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between mt-6">
+            <button id="prev-scenario-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg shadow-sm transition duration-300 ease-in-out transform hover:scale-105">
+                &larr; Previous
+            </button>
+            <button id="next-scenario-btn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+                Next Scenario &rarr;
+            </button>
+        </div>
+    </div>
+
+
+    <script>
+        // Array of scenario objects
+        const scenarios = [
+            {
+                id: 1,
+                scenarioText: "Sarah arrives at school 15 minutes late to her first class because she got stuck in traffic. She walks straight to class without checking in at the office.",
+                applicableRule: "Tardy to School / Unexcused Tardies",
+                suggestedHandling: "Students tardy to school must report to the Administration Office to sign in and receive a pass before going to class. Failure to follow this procedure can result in an unexcused tardy and further consequences.",
+                plannerReference: "See 'Tardy' and 'Reporting to School' sections in Chapter 19."
+            },
+            {
+                id: 2,
+                scenarioText: "During lunch, a heated argument from social media last night between two students, Alex and Ben, spills over into the cafeteria. They start yelling insults at each other.",
+                applicableRule: "Disorderly Conduct / Abusive Language / Harassment / Bullying",
+                suggestedHandling: "Students are expected to maintain respectful behavior and language at all times. Engaging in verbal altercations, using abusive language, or continuing conflicts from social media on campus violates school expectations. This could lead to disciplinary action, including suspension, and may involve parent conferences or law enforcement depending on severity.",
+                plannerReference: "See 'Disorderly Conduct', 'Abusive Language', 'Bullying/Harassment' sections in Chapter 19."
+            },
+            {
+                id: 3,
+                scenarioText: "During a history lecture, Emily is quietly scrolling through TikTok on her phone under her desk. Her teacher notices.",
+                applicableRule: "Unauthorized Use of Communication Devices / Other School Rules",
+                suggestedHandling: "Unless explicitly permitted by the teacher for instructional purposes, personal communication devices (like cell phones) should be turned off and put away during instructional time. Consequences typically involve confiscation, parent pick-up, and potential disciplinary action for repeated offenses.",
+                plannerReference: "See 'Communication Devices' section in Chapter 19."
+            },
+            {
+                id: 4,
+                scenarioText: "David brings a new type of energy drink to school and offers some to his friend, Maya, during break. It's a non-alcoholic drink, but it's not something sold in the cafeteria.",
+                applicableRule: "Distribution of Unauthorized Substances / Other School Rules",
+                suggestedHandling: "Students are generally not permitted to distribute or sell any substances, including food or drinks not authorized by the school, to other students. This is a safety measure to prevent issues with unknown ingredients, allergies, or other health concerns. Students should only consume items brought for personal use or purchased from authorized school vendors.",
+                plannerReference: "See 'Over the Counter Drug Guidelines' (specifically distribution) and 'Other School Rules' sections in Chapter 19."
+            },
+            {
+                id: 5,
+                scenarioText: "Liam forgot his ID badge at home. His friend, Chloe, offers to let him use her old, expired one from last year to get into the building.",
+                applicableRule: "Student ID Badges / Falsification of Information",
+                suggestedHandling: "Students are required to wear their current school ID badge at all times while on campus. Using another student's ID or an expired ID is a violation of school policy and could be considered falsification. Liam should report to the Administration Office to get a temporary ID or guidance on how to obtain a new one.",
+                plannerReference: "See 'Student ID Badges' section in Chapter 19."
+            },
+            {
+                id: 6,
+                scenarioText: "During class, three students ask for a restroom pass, but instead of going to the closest restroom and returning directly, they all meet up in a farther bathroom to chat for 10 minutes.",
+                applicableRule: "Class Cutting / Unauthorized Areas / Loitering",
+                suggestedHandling: "Students are expected to go directly to and from their intended destination when given a pass. Loitering or congregating in restrooms or other unauthorized areas during class time is considered class cutting and a violation of behavior expectations. This can lead to disciplinary action, including detention or suspension.",
+                plannerReference: "See 'Class Cutting', 'Restroom Pass', and 'Unauthorized Areas' sections in Chapter 19."
+            }
+        ];
+
+
+        let currentScenarioIndex = 0;
+
+
+        // Get DOM elements
+        const scenarioText = document.getElementById('scenario-text');
+        const userRuleInput = document.getElementById('user-rule');
+        const userHandlingInput = document.getElementById('user-handling');
+        const checkAnswerBtn = document.getElementById('check-answer-btn');
+        const clearAnswersBtn = document.getElementById('clear-answers-btn');
+        const feedbackArea = document.getElementById('feedback-area');
+        const feedbackRule = document.getElementById('feedback-rule');
+        const feedbackHandling = document.getElementById('feedback-handling');
+        const feedbackReference = document.getElementById('feedback-reference');
+        const prevScenarioBtn = document.getElementById('prev-scenario-btn');
+        const nextScenarioBtn = document.getElementById('next-scenario-btn');
+        const progressIndicator = document.getElementById('progress-indicator');
+
+
+        // Function to load a scenario
+        function loadScenario(index) {
+            // Hide feedback and clear user inputs when loading a new scenario
+            feedbackArea.classList.add('hidden');
+            userRuleInput.value = '';
+            userHandlingInput.value = '';
+
+
+            const scenario = scenarios[index];
+            scenarioText.textContent = scenario.scenarioText;
+            progressIndicator.textContent = `Scenario ${index + 1} of ${scenarios.length}`;
+
+
+            // Disable/enable navigation buttons
+            prevScenarioBtn.disabled = index === 0;
+            nextScenarioBtn.disabled = index === scenarios.length - 1;
+
+
+            // Style disabled buttons
+            if (prevScenarioBtn.disabled) {
+                prevScenarioBtn.classList.remove('bg-gray-300', 'hover:bg-gray-400', 'text-gray-800');
+                prevScenarioBtn.classList.add('bg-gray-100', 'text-gray-400', 'cursor-not-allowed');
+            } else {
+                prevScenarioBtn.classList.add('bg-gray-200', 'hover:bg-gray-300', 'text-gray-700');
+                prevScenarioBtn.classList.remove('bg-gray-100', 'text-gray-400', 'cursor-not-allowed');
+            }
+
+
+            if (nextScenarioBtn.disabled) {
+                nextScenarioBtn.classList.remove('bg-green-500', 'hover:bg-green-600', 'text-white');
+                nextScenarioBtn.classList.add('bg-gray-100', 'text-gray-400', 'cursor-not-allowed');
+            } else {
+                nextScenarioBtn.classList.add('bg-green-500', 'hover:bg-green-600', 'text-white');
+                nextScenarioBtn.classList.remove('bg-gray-100', 'text-gray-400', 'cursor-not-allowed');
+            }
+        }
+
+
+        // Event Listeners
+        checkAnswerBtn.addEventListener('click', () => {
+            const currentScenario = scenarios[currentScenarioIndex];
+            feedbackRule.textContent = currentScenario.applicableRule;
+            feedbackHandling.textContent = currentScenario.suggestedHandling;
+            feedbackReference.textContent = currentScenario.plannerReference;
+            feedbackArea.classList.remove('hidden');
+        });
+
+
+        clearAnswersBtn.addEventListener('click', () => {
+            userRuleInput.value = '';
+            userHandlingInput.value = '';
+            feedbackArea.classList.add('hidden'); // Hide feedback when clearing
+        });
+
+
+        prevScenarioBtn.addEventListener('click', () => {
+            if (currentScenarioIndex > 0) {
+                currentScenarioIndex--;
+                loadScenario(currentScenarioIndex);
+            }
+        });
+
+
+        nextScenarioBtn.addEventListener('click', () => {
+            if (currentScenarioIndex < scenarios.length - 1) {
+                currentScenarioIndex++;
+                loadScenario(currentScenarioIndex);
+            }
+        });
+
+
+        // Initial load
+        window.onload = () => {
+            loadScenario(currentScenarioIndex);
+        };
+    </script>
+</body>
+</html>
